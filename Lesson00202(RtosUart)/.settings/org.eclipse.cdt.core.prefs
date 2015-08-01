@@ -1,0 +1,6 @@
+eclipse.preferences.version=1
+environment/project/ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.1314253290/PATH/delimiter=;
+environment/project/ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.1314253290/PATH/operation=replace
+environment/project/ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.1314253290/PATH/value=C\:\\Program Files (x86)\\GNU Tools ARM Embedded\\4.9 2015q2\\bin;C\:/Program Files/Java/jre1.8.0_51/bin/server;C\:/Program Files/Java/jre1.8.0_51/bin;C\:/Program Files/Java/jre1.8.0_51/lib/amd64;C\:\\ProgramData\\Oracle\\Java\\javapath;C\:\\Program Files (x86)\\Atmel\\AVR Tools\\AvrStudio4\\bin;C\:\\CooCox\\CoIDE\\gcc\\bin;.;;C\:\\eclipseSTM;;.;;.
+environment/project/ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.1314253290/append=true
+environment/project/ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.1314253290/appendContributed=true
