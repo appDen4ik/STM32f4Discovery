@@ -1,0 +1,7 @@
+21:27:45 **** Clean-only build of configuration Debug for project Lesson00101(USART) ****
+make clean 
+rm -rf  ./User/main.o  ./SPL/Source/stm32f4xx_gpio.o ./SPL/Source/stm32f4xx_rcc.o ./SPL/Source/stm32f4xx_usart.o  ./CMSIS/Startup/startup_stm32f40xx.o  ./CMSIS/system_stm32f4xx.o  Lesson00101(USART).hex  Lesson00101(USART).siz  ./CMSIS/Startup/startup_stm32f40xx.d  ./User/main.d  ./SPL/Source/stm32f4xx_gpio.d ./SPL/Source/stm32f4xx_rcc.d ./SPL/Source/stm32f4xx_usart.d  ./CMSIS/system_stm32f4xx.d  Lesson00101(USART).elf
+' '
+
+21:27:46 Build Finished (took 86ms)
+

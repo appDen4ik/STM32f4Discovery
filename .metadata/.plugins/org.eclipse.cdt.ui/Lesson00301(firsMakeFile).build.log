@@ -1,0 +1,10 @@
+21:30:16 **** Build of configuration Debug for project Lesson00301(firsMakeFile) ****
+make all 
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -I"D:\git\STM32f4Discovery\Lesson00301(firsMakeFile)" -c -o "D:\git\STM32f4Discovery\Lesson00301(firsMakeFile)\main.o"  "D:\git\STM32f4Discovery\Lesson00301(firsMakeFile)\main.c" 
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -I"D:\git\STM32f4Discovery\Lesson00301(firsMakeFile)" -c -o "D:\git\STM32f4Discovery\Lesson00301(firsMakeFile)\system_stm32f4xx.o"  "D:\git\STM32f4Discovery\Lesson00301(firsMakeFile)\system_stm32f4xx.c" 
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -I"D:\git\STM32f4Discovery\Lesson00301(firsMakeFile)" -c -o "D:\git\STM32f4Discovery\Lesson00301(firsMakeFile)\startup_stm32f40xx.o"  "D:\git\STM32f4Discovery\Lesson00301(firsMakeFile)\startup_stm32f40xx.S" 
+arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -T "D:\git\STM32f4Discovery\Lesson00301(firsMakeFile)\STM32F417IG_FLASH.ld" -Xlinker --gc-sections -Wl,-Map,"sec.map" -o "sec.elf" "D:\git\STM32f4Discovery\Lesson00301(firsMakeFile)\main.o" "D:\git\STM32f4Discovery\Lesson00301(firsMakeFile)\system_stm32f4xx.o" "D:\git\STM32f4Discovery\Lesson00301(firsMakeFile)\startup_stm32f40xx.o"
+arm-none-eabi-objcopy -O ihex "sec.elf"  "sec.hex"
+
+21:30:16 Build Finished (took 326ms)
+

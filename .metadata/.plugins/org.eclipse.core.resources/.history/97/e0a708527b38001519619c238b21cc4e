@@ -1,0 +1,25 @@
+FreeRtos/Source/list.o: ../FreeRtos/Source/list.c \
+ D:\git\STM32f4Discovery\Lesson00201(Rtos)\FreeRtos\Include/FreeRTOS.h \
+ D:\git\STM32f4Discovery\Lesson00201(Rtos)\User/FreeRTOSConfig.h \
+ D:\git\STM32f4Discovery\Lesson00201(Rtos)\FreeRtos\Include/projdefs.h \
+ D:\git\STM32f4Discovery\Lesson00201(Rtos)\FreeRtos\Include/portable.h \
+ D:\git\STM32f4Discovery\Lesson00201(Rtos)\FreeRtos\Include/deprecated_definitions.h \
+ D:\git\STM32f4Discovery\Lesson00201(Rtos)\FreeRtos\Include/portmacro.h \
+ D:\git\STM32f4Discovery\Lesson00201(Rtos)\FreeRtos\Include/mpu_wrappers.h \
+ D:\git\STM32f4Discovery\Lesson00201(Rtos)\FreeRtos\Include/list.h
+
+D:\git\STM32f4Discovery\Lesson00201(Rtos)\FreeRtos\Include/FreeRTOS.h:
+
+D:\git\STM32f4Discovery\Lesson00201(Rtos)\User/FreeRTOSConfig.h:
+
+D:\git\STM32f4Discovery\Lesson00201(Rtos)\FreeRtos\Include/projdefs.h:
+
+D:\git\STM32f4Discovery\Lesson00201(Rtos)\FreeRtos\Include/portable.h:
+
+D:\git\STM32f4Discovery\Lesson00201(Rtos)\FreeRtos\Include/deprecated_definitions.h:
+
+D:\git\STM32f4Discovery\Lesson00201(Rtos)\FreeRtos\Include/portmacro.h:
+
+D:\git\STM32f4Discovery\Lesson00201(Rtos)\FreeRtos\Include/mpu_wrappers.h:
+
+D:\git\STM32f4Discovery\Lesson00201(Rtos)\FreeRtos\Include/list.h:
