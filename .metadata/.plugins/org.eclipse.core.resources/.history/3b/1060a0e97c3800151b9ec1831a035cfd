@@ -1,0 +1,30 @@
+################################################################################
+# Automatically-generated file. Do not edit!
+################################################################################
+
+# Add inputs and outputs from these tool invocations to the build variables 
+C_SRCS += \
+../SPL/Source/stm32f4xx_gpio.c \
+../SPL/Source/stm32f4xx_rcc.c \
+../SPL/Source/stm32f4xx_usart.c 
+
+OBJS += \
+./SPL/Source/stm32f4xx_gpio.o \
+./SPL/Source/stm32f4xx_rcc.o \
+./SPL/Source/stm32f4xx_usart.o 
+
+C_DEPS += \
+./SPL/Source/stm32f4xx_gpio.d \
+./SPL/Source/stm32f4xx_rcc.d \
+./SPL/Source/stm32f4xx_usart.d 
+
+
+# Each subdirectory must supply rules for building sources it contributes
+SPL/Source/%.o: ../SPL/Source/%.c
+	@echo 'Building file: $<'
+	@echo 'Invoking: Cross ARM C Compiler'
+	arm-none-eabi-gcc -mcpu=cortex-m4 -march=armv7e-m -mthumb -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections  -g -Dassert_param(x) -I"D:\git\STM32f4Discovery\Lesson00202(RtosUart)\CMSIS" -I"D:\git\STM32f4Discovery\Lesson00202(RtosUart)\FreeRtos\Include" -I"D:\git\STM32f4Discovery\Lesson00202(RtosUart)\CMSIS\Startup" -I"D:\git\STM32f4Discovery\Lesson00202(RtosUart)\CMSIS\Core" -I"D:\git\STM32f4Discovery\Lesson00202(RtosUart)\SPL\Include" -I"D:\git\STM32f4Discovery\Lesson00202(RtosUart)\User" -std=gnu11 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" -c -o "$@" "$<"
+	@echo 'Finished building: $<'
+	@echo ' '
+
+

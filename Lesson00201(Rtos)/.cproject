@@ -49,17 +49,12 @@
 							</tool>
 							<tool command="${cross_prefix}${cross_c}${cross_suffix}" commandLinePattern="${COMMAND} ${cross_toolchain_flags} ${FLAGS} -c ${OUTPUT_FLAG} ${OUTPUT_PREFIX}${OUTPUT} ${INPUTS}" errorParsers="org.eclipse.cdt.core.GLDErrorParser;org.eclipse.cdt.core.GCCErrorParser" id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.587500050" name="Cross ARM C Compiler" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler">
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.include.paths.281468081" name="Include paths (-I)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.include.paths" useByScannerDiscovery="false" valueType="includePath">
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Lesson00201(Rtos)/SPL}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Lesson00201(Rtos)}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Lesson00201(Rtos)/FreeRtos}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Lesson00201(Rtos)/FreeRtos/Include}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Lesson00201(Rtos)/FreeRtos/Source}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Lesson00201(Rtos)/SPL/Include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Lesson00201(Rtos)/CMSIS}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Lesson00201(Rtos)/CMSIS/Core}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Lesson00201(Rtos)/CMSIS/Startup}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Lesson00201(Rtos)/User}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Lesson00201(Rtos)/SPL/Source}&quot;"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs.1079097733" name="Defined symbols (-D)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="assert_param(extr)"/>

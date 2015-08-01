@@ -1,0 +1,37 @@
+FreeRtos/Source/tasks.o: ../FreeRtos/Source/tasks.c \
+ D:\git\STM32f4Discovery\Lesson00202(RtosUart)\FreeRtos\Include/FreeRTOS.h \
+ D:\git\STM32f4Discovery\Lesson00202(RtosUart)\User/FreeRTOSConfig.h \
+ D:\git\STM32f4Discovery\Lesson00202(RtosUart)\FreeRtos\Include/projdefs.h \
+ D:\git\STM32f4Discovery\Lesson00202(RtosUart)\FreeRtos\Include/portable.h \
+ D:\git\STM32f4Discovery\Lesson00202(RtosUart)\FreeRtos\Include/deprecated_definitions.h \
+ D:\git\STM32f4Discovery\Lesson00202(RtosUart)\FreeRtos\Include/portmacro.h \
+ D:\git\STM32f4Discovery\Lesson00202(RtosUart)\FreeRtos\Include/mpu_wrappers.h \
+ D:\git\STM32f4Discovery\Lesson00202(RtosUart)\FreeRtos\Include/task.h \
+ D:\git\STM32f4Discovery\Lesson00202(RtosUart)\FreeRtos\Include/list.h \
+ D:\git\STM32f4Discovery\Lesson00202(RtosUart)\FreeRtos\Include/timers.h \
+ D:\git\STM32f4Discovery\Lesson00202(RtosUart)\FreeRtos\Include/task.h \
+ D:\git\STM32f4Discovery\Lesson00202(RtosUart)\FreeRtos\Include/StackMacros.h
+
+D:\git\STM32f4Discovery\Lesson00202(RtosUart)\FreeRtos\Include/FreeRTOS.h:
+
+D:\git\STM32f4Discovery\Lesson00202(RtosUart)\User/FreeRTOSConfig.h:
+
+D:\git\STM32f4Discovery\Lesson00202(RtosUart)\FreeRtos\Include/projdefs.h:
+
+D:\git\STM32f4Discovery\Lesson00202(RtosUart)\FreeRtos\Include/portable.h:
+
+D:\git\STM32f4Discovery\Lesson00202(RtosUart)\FreeRtos\Include/deprecated_definitions.h:
+
+D:\git\STM32f4Discovery\Lesson00202(RtosUart)\FreeRtos\Include/portmacro.h:
+
+D:\git\STM32f4Discovery\Lesson00202(RtosUart)\FreeRtos\Include/mpu_wrappers.h:
+
+D:\git\STM32f4Discovery\Lesson00202(RtosUart)\FreeRtos\Include/task.h:
+
+D:\git\STM32f4Discovery\Lesson00202(RtosUart)\FreeRtos\Include/list.h:
+
+D:\git\STM32f4Discovery\Lesson00202(RtosUart)\FreeRtos\Include/timers.h:
+
+D:\git\STM32f4Discovery\Lesson00202(RtosUart)\FreeRtos\Include/task.h:
+
+D:\git\STM32f4Discovery\Lesson00202(RtosUart)\FreeRtos\Include/StackMacros.h:

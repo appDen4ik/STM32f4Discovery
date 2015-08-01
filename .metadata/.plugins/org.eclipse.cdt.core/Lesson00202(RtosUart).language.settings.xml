@@ -112,9 +112,6 @@
 					<entry kind="macro" name="__BIGGEST_ALIGNMENT__" value="8">
 						<flag value="BUILTIN|READONLY"/>
 					</entry>
-					<entry kind="macro" name="__BIGGEST_ALIGNMENT__" value="2">
-						<flag value="BUILTIN|READONLY"/>
-					</entry>
 					<entry kind="macro" name="__BYTE_ORDER__" value="__ORDER_LITTLE_ENDIAN__">
 						<flag value="BUILTIN|READONLY"/>
 					</entry>
@@ -320,6 +317,9 @@
 						<flag value="BUILTIN|READONLY"/>
 					</entry>
 					<entry kind="macro" name="__FRACT_MIN__" value="(-0.5R-0.5R)">
+						<flag value="BUILTIN|READONLY"/>
+					</entry>
+					<entry kind="macro" name="__GCC_ATOMIC_BOOL_LOCK_FREE" value="2">
 						<flag value="BUILTIN|READONLY"/>
 					</entry>
 					<entry kind="macro" name="__GCC_ATOMIC_CHAR16_T_LOCK_FREE" value="2">
@@ -1188,6 +1188,9 @@
 					<entry kind="macro" name="__ARM_SIZEOF_WCHAR_T" value="4">
 						<flag value="BUILTIN|READONLY"/>
 					</entry>
+					<entry kind="macro" name="__ATOMIC_ACQUIRE" value="2">
+						<flag value="BUILTIN|READONLY"/>
+					</entry>
 					<entry kind="macro" name="__ATOMIC_ACQ_REL" value="4">
 						<flag value="BUILTIN|READONLY"/>
 					</entry>
@@ -1285,9 +1288,6 @@
 						<flag value="BUILTIN|READONLY"/>
 					</entry>
 					<entry kind="macro" name="__DEC128_SUBNORMAL_MIN__" value="0.000000000000000000000000000000001E-6143DL">
-						<flag value="BUILTIN|READONLY"/>
-					</entry>
-					<entry kind="macro" name="__DEC128_SUBNORMAL_MIN__" value="8">
 						<flag value="BUILTIN|READONLY"/>
 					</entry>
 					<entry kind="macro" name="__DEC32_EPSILON__" value="1E-6DF">
@@ -1591,9 +1591,6 @@
 						<flag value="BUILTIN|READONLY"/>
 					</entry>
 					<entry kind="macro" name="__INT_LEAST16_MAX__" value="32767">
-						<flag value="BUILTIN|READONLY"/>
-					</entry>
-					<entry kind="macro" name="__INT_LEAST16_TYPE__" value="2">
 						<flag value="BUILTIN|READONLY"/>
 					</entry>
 					<entry kind="macro" name="__INT_LEAST16_TYPE__" value="short int">
@@ -2128,6 +2125,9 @@
 						<flag value="BUILTIN|READONLY"/>
 					</entry>
 					<entry kind="macro" name="__USFRACT_EPSILON__" value="0x1P-8UHR">
+						<flag value="BUILTIN|READONLY"/>
+					</entry>
+					<entry kind="macro" name="__USFRACT_FBIT__" value="8">
 						<flag value="BUILTIN|READONLY"/>
 					</entry>
 					<entry kind="macro" name="__USFRACT_IBIT__" value="0">

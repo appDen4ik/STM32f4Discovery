@@ -48,16 +48,11 @@
 							</tool>
 							<tool command="${cross_prefix}${cross_c}${cross_suffix}" commandLinePattern="${COMMAND} ${cross_toolchain_flags} ${FLAGS} -c ${OUTPUT_FLAG} ${OUTPUT_PREFIX}${OUTPUT} ${INPUTS}" errorParsers="org.eclipse.cdt.core.GLDErrorParser;org.eclipse.cdt.core.GCCErrorParser" id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.546634563" name="Cross ARM C Compiler" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler">
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.include.paths.1056080117" name="Include paths (-I)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.include.paths" useByScannerDiscovery="false" valueType="includePath">
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Lesson00202(RtosUart)/}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Lesson00202(RtosUart)/CMSIS}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Lesson00202(RtosUart)/FreeRtos/Source}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Lesson00202(RtosUart)/FreeRtos/Include}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Lesson00202(RtosUart)/FreeRtos}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Lesson00202(RtosUart)/CMSIS/Startup}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Lesson00202(RtosUart)/CMSIS/Core}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Lesson00202(RtosUart)/SPL}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Lesson00202(RtosUart)/SPL/Include}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Lesson00202(RtosUart)/SPL/Source}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Lesson00202(RtosUart)/User}&quot;"/>
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs.1149343686" name="Defined symbols (-D)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.defs" useByScannerDiscovery="false" valueType="definedSymbols">

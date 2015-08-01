@@ -1,7 +1,85 @@
-21:30:16 **** Build of configuration Debug for project Lesson00301(firsMakeFile) ****
+21:42:48 **** Build of configuration Debug for project Lesson00201(Rtos) ****
 make all 
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -I"D:\git\STM32f4Discovery\Lesson00301(firsMakeFile)" -c -o "D:\git\STM32f4Discovery\Lesson00301(firsMakeFile)\main.o"  "D:\git\STM32f4Discovery\Lesson00301(firsMakeFile)\main.c" 
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -I"D:\git\STM32f4Discovery\Lesson00301(firsMakeFile)" -c -o "D:\git\STM32f4Discovery\Lesson00301(firsMakeFile)\system_stm32f4xx.o"  "D:\git\STM32f4Discovery\Lesson00301(firsMakeFile)\system_stm32f4xx.c" 
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -I"D:\git\STM32f4Discovery\Lesson00301(firsMakeFile)" -c -o "D:\git\STM32f4Discovery\Lesson00301(firsMakeFile)\startup_stm32f40xx.o"  "D:\git\STM32f4Discovery\Lesson00301(firsMakeFile)\startup_stm32f40xx.S" 
-arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -T "D:\git\STM32f4Discovery\Lesson00301(firsMakeFile)\STM32F417IG_FLASH.ld" -Xlinker --gc-sections -Wl,-Map,"sec.map" -o "sec.elf" "D:\git\STM32f4Discovery\Lesson00301(firsMakeFile)\main.o" "D:\git\STM32f4Discovery\Lesson00301(firsMakeFile)\system_stm32f4xx.o" "D:\git\STM32f4Discovery\Lesson00301(firsMakeFile)\startup_stm32f40xx.o"
-arm-none-eabi-objcopy -O ihex "sec.elf"  "sec.hex"
+'Building file: ../User/main.c'
+'Invoking: Cross ARM C Compiler'
+arm-none-eabi-gcc -mcpu=cortex-m4 -march=armv7e-m -mthumb -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections  -g -Dassert_param(extr) -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\FreeRtos\Include" -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\SPL\Include" -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\CMSIS" -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\CMSIS\Core" -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\CMSIS\Startup" -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\User" -std=gnu99 -MMD -MP -MF"User/main.d" -MT"User/main.o" -c -o "User/main.o" "../User/main.c"
+'Finished building: ../User/main.c'
+' '
+'Building file: ../SPL/Source/stm32f4xx_gpio.c'
+'Invoking: Cross ARM C Compiler'
+arm-none-eabi-gcc -mcpu=cortex-m4 -march=armv7e-m -mthumb -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections  -g -Dassert_param(extr) -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\FreeRtos\Include" -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\SPL\Include" -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\CMSIS" -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\CMSIS\Core" -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\CMSIS\Startup" -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\User" -std=gnu99 -MMD -MP -MF"SPL/Source/stm32f4xx_gpio.d" -MT"SPL/Source/stm32f4xx_gpio.o" -c -o "SPL/Source/stm32f4xx_gpio.o" "../SPL/Source/stm32f4xx_gpio.c"
+'Finished building: ../SPL/Source/stm32f4xx_gpio.c'
+' '
+'Building file: ../SPL/Source/stm32f4xx_rcc.c'
+'Invoking: Cross ARM C Compiler'
+arm-none-eabi-gcc -mcpu=cortex-m4 -march=armv7e-m -mthumb -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections  -g -Dassert_param(extr) -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\FreeRtos\Include" -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\SPL\Include" -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\CMSIS" -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\CMSIS\Core" -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\CMSIS\Startup" -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\User" -std=gnu99 -MMD -MP -MF"SPL/Source/stm32f4xx_rcc.d" -MT"SPL/Source/stm32f4xx_rcc.o" -c -o "SPL/Source/stm32f4xx_rcc.o" "../SPL/Source/stm32f4xx_rcc.c"
+'Finished building: ../SPL/Source/stm32f4xx_rcc.c'
+' '
+'Building file: ../FreeRtos/Source/croutine.c'
+'Invoking: Cross ARM C Compiler'
+arm-none-eabi-gcc -mcpu=cortex-m4 -march=armv7e-m -mthumb -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections  -g -Dassert_param(extr) -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\FreeRtos\Include" -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\SPL\Include" -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\CMSIS" -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\CMSIS\Core" -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\CMSIS\Startup" -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\User" -std=gnu99 -MMD -MP -MF"FreeRtos/Source/croutine.d" -MT"FreeRtos/Source/croutine.o" -c -o "FreeRtos/Source/croutine.o" "../FreeRtos/Source/croutine.c"
+'Finished building: ../FreeRtos/Source/croutine.c'
+' '
+'Building file: ../FreeRtos/Source/event_groups.c'
+'Invoking: Cross ARM C Compiler'
+arm-none-eabi-gcc -mcpu=cortex-m4 -march=armv7e-m -mthumb -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections  -g -Dassert_param(extr) -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\FreeRtos\Include" -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\SPL\Include" -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\CMSIS" -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\CMSIS\Core" -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\CMSIS\Startup" -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\User" -std=gnu99 -MMD -MP -MF"FreeRtos/Source/event_groups.d" -MT"FreeRtos/Source/event_groups.o" -c -o "FreeRtos/Source/event_groups.o" "../FreeRtos/Source/event_groups.c"
+'Finished building: ../FreeRtos/Source/event_groups.c'
+' '
+'Building file: ../FreeRtos/Source/heap_2.c'
+'Invoking: Cross ARM C Compiler'
+arm-none-eabi-gcc -mcpu=cortex-m4 -march=armv7e-m -mthumb -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections  -g -Dassert_param(extr) -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\FreeRtos\Include" -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\SPL\Include" -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\CMSIS" -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\CMSIS\Core" -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\CMSIS\Startup" -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\User" -std=gnu99 -MMD -MP -MF"FreeRtos/Source/heap_2.d" -MT"FreeRtos/Source/heap_2.o" -c -o "FreeRtos/Source/heap_2.o" "../FreeRtos/Source/heap_2.c"
+'Finished building: ../FreeRtos/Source/heap_2.c'
+' '
+'Building file: ../FreeRtos/Source/list.c'
+'Invoking: Cross ARM C Compiler'
+arm-none-eabi-gcc -mcpu=cortex-m4 -march=armv7e-m -mthumb -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections  -g -Dassert_param(extr) -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\FreeRtos\Include" -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\SPL\Include" -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\CMSIS" -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\CMSIS\Core" -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\CMSIS\Startup" -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\User" -std=gnu99 -MMD -MP -MF"FreeRtos/Source/list.d" -MT"FreeRtos/Source/list.o" -c -o "FreeRtos/Source/list.o" "../FreeRtos/Source/list.c"
+'Finished building: ../FreeRtos/Source/list.c'
+' '
+'Building file: ../FreeRtos/Source/port.c'
+'Invoking: Cross ARM C Compiler'
+arm-none-eabi-gcc -mcpu=cortex-m4 -march=armv7e-m -mthumb -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections  -g -Dassert_param(extr) -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\FreeRtos\Include" -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\SPL\Include" -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\CMSIS" -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\CMSIS\Core" -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\CMSIS\Startup" -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\User" -std=gnu99 -MMD -MP -MF"FreeRtos/Source/port.d" -MT"FreeRtos/Source/port.o" -c -o "FreeRtos/Source/port.o" "../FreeRtos/Source/port.c"
+'Finished building: ../FreeRtos/Source/port.c'
+' '
+'Building file: ../FreeRtos/Source/queue.c'
+'Invoking: Cross ARM C Compiler'
+arm-none-eabi-gcc -mcpu=cortex-m4 -march=armv7e-m -mthumb -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections  -g -Dassert_param(extr) -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\FreeRtos\Include" -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\SPL\Include" -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\CMSIS" -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\CMSIS\Core" -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\CMSIS\Startup" -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\User" -std=gnu99 -MMD -MP -MF"FreeRtos/Source/queue.d" -MT"FreeRtos/Source/queue.o" -c -o "FreeRtos/Source/queue.o" "../FreeRtos/Source/queue.c"
+'Finished building: ../FreeRtos/Source/queue.c'
+' '
+'Building file: ../FreeRtos/Source/tasks.c'
+'Invoking: Cross ARM C Compiler'
+arm-none-eabi-gcc -mcpu=cortex-m4 -march=armv7e-m -mthumb -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections  -g -Dassert_param(extr) -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\FreeRtos\Include" -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\SPL\Include" -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\CMSIS" -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\CMSIS\Core" -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\CMSIS\Startup" -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\User" -std=gnu99 -MMD -MP -MF"FreeRtos/Source/tasks.d" -MT"FreeRtos/Source/tasks.o" -c -o "FreeRtos/Source/tasks.o" "../FreeRtos/Source/tasks.c"
+'Finished building: ../FreeRtos/Source/tasks.c'
+' '
+'Building file: ../FreeRtos/Source/timers.c'
+'Invoking: Cross ARM C Compiler'
+arm-none-eabi-gcc -mcpu=cortex-m4 -march=armv7e-m -mthumb -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections  -g -Dassert_param(extr) -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\FreeRtos\Include" -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\SPL\Include" -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\CMSIS" -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\CMSIS\Core" -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\CMSIS\Startup" -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\User" -std=gnu99 -MMD -MP -MF"FreeRtos/Source/timers.d" -MT"FreeRtos/Source/timers.o" -c -o "FreeRtos/Source/timers.o" "../FreeRtos/Source/timers.c"
+'Finished building: ../FreeRtos/Source/timers.c'
+' '
+'Building file: ../CMSIS/Startup/startup_stm32f40xx.S'
+'Invoking: Cross ARM GNU Assembler'
+arm-none-eabi-gcc -mcpu=cortex-m4 -march=armv7e-m -mthumb -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections  -g -x assembler-with-cpp -MMD -MP -MF"CMSIS/Startup/startup_stm32f40xx.d" -MT"CMSIS/Startup/startup_stm32f40xx.o" -c -o "CMSIS/Startup/startup_stm32f40xx.o" "../CMSIS/Startup/startup_stm32f40xx.S"
+'Finished building: ../CMSIS/Startup/startup_stm32f40xx.S'
+' '
+'Building file: ../CMSIS/system_stm32f4xx.c'
+'Invoking: Cross ARM C Compiler'
+arm-none-eabi-gcc -mcpu=cortex-m4 -march=armv7e-m -mthumb -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections  -g -Dassert_param(extr) -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\FreeRtos\Include" -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\SPL\Include" -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\CMSIS" -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\CMSIS\Core" -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\CMSIS\Startup" -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\User" -std=gnu99 -MMD -MP -MF"CMSIS/system_stm32f4xx.d" -MT"CMSIS/system_stm32f4xx.o" -c -o "CMSIS/system_stm32f4xx.o" "../CMSIS/system_stm32f4xx.c"
+'Finished building: ../CMSIS/system_stm32f4xx.c'
+' '
+'Building target: Lesson00201(Rtos).elf'
+'Invoking: Cross ARM C Linker'
+arm-none-eabi-gcc -mcpu=cortex-m4 -march=armv7e-m -mthumb -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections  -g -T "D:\git\STM32f4Discovery\Lesson00101(USART)\CMSIS\STM32F417IG_FLASH.ld" -Xlinker --gc-sections -Wl,-Map,"Lesson00201(Rtos).map" -o "Lesson00201(Rtos).elf"  ./User/main.o  ./SPL/Source/stm32f4xx_gpio.o ./SPL/Source/stm32f4xx_rcc.o  ./FreeRtos/Source/croutine.o ./FreeRtos/Source/event_groups.o ./FreeRtos/Source/heap_2.o ./FreeRtos/Source/list.o ./FreeRtos/Source/port.o ./FreeRtos/Source/queue.o ./FreeRtos/Source/tasks.o ./FreeRtos/Source/timers.o  ./CMSIS/Startup/startup_stm32f40xx.o  ./CMSIS/system_stm32f4xx.o   
+'Finished building target: Lesson00201(Rtos).elf'
+' '
+'Invoking: Cross ARM GNU Create Flash Image'
+arm-none-eabi-objcopy -O ihex "Lesson00201(Rtos).elf"  "Lesson00201(Rtos).hex"
+'Finished building: Lesson00201(Rtos).hex'
+' '
+'Invoking: Cross ARM GNU Print Size'
+arm-none-eabi-size --format=berkeley "Lesson00201(Rtos).elf"
+   text	   data	    bss	    dec	    hex	filename
+  11040	   1092	  78764	  90896	  16310	Lesson00201(Rtos).elf
+'Finished building: Lesson00201(Rtos).siz'
+' '
+
+21:42:50 Build Finished (took 2s.266ms)
+

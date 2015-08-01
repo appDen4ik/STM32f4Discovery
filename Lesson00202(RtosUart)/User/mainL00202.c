@@ -2,13 +2,9 @@
 #include "stm32f4xx_rcc.h"
 #include "stm32f4xx_usart.h"
 
-
-
 #include "FreeRTOS.h"
 #include "task.h"
 #include "semphr.h"
-
-
 
 
 void Led1( void *pvParameters );

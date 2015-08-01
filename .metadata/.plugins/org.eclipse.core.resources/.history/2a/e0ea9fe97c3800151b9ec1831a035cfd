@@ -1,0 +1,22 @@
+SPL/Source/stm32f4xx_rcc.o: ../SPL/Source/stm32f4xx_rcc.c \
+ D:\git\STM32f4Discovery\Lesson00202(RtosUart)\SPL\Include/stm32f4xx_rcc.h \
+ D:\git\STM32f4Discovery\Lesson00202(RtosUart)\CMSIS/stm32f4xx.h \
+ D:\git\STM32f4Discovery\Lesson00202(RtosUart)\CMSIS\Core/core_cm4.h \
+ D:\git\STM32f4Discovery\Lesson00202(RtosUart)\CMSIS\Core/core_cmInstr.h \
+ D:\git\STM32f4Discovery\Lesson00202(RtosUart)\CMSIS\Core/core_cmFunc.h \
+ D:\git\STM32f4Discovery\Lesson00202(RtosUart)\CMSIS\Core/core_cmSimd.h \
+ D:\git\STM32f4Discovery\Lesson00202(RtosUart)\CMSIS/system_stm32f4xx.h
+
+D:\git\STM32f4Discovery\Lesson00202(RtosUart)\SPL\Include/stm32f4xx_rcc.h:
+
+D:\git\STM32f4Discovery\Lesson00202(RtosUart)\CMSIS/stm32f4xx.h:
+
+D:\git\STM32f4Discovery\Lesson00202(RtosUart)\CMSIS\Core/core_cm4.h:
+
+D:\git\STM32f4Discovery\Lesson00202(RtosUart)\CMSIS\Core/core_cmInstr.h:
+
+D:\git\STM32f4Discovery\Lesson00202(RtosUart)\CMSIS\Core/core_cmFunc.h:
+
+D:\git\STM32f4Discovery\Lesson00202(RtosUart)\CMSIS\Core/core_cmSimd.h:
+
+D:\git\STM32f4Discovery\Lesson00202(RtosUart)\CMSIS/system_stm32f4xx.h:

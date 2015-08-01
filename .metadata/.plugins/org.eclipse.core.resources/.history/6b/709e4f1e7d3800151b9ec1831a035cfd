@@ -1,0 +1,45 @@
+################################################################################
+# Automatically-generated file. Do not edit!
+################################################################################
+
+# Add inputs and outputs from these tool invocations to the build variables 
+C_SRCS += \
+../FreeRtos/Source/croutine.c \
+../FreeRtos/Source/event_groups.c \
+../FreeRtos/Source/heap_2.c \
+../FreeRtos/Source/list.c \
+../FreeRtos/Source/port.c \
+../FreeRtos/Source/queue.c \
+../FreeRtos/Source/tasks.c \
+../FreeRtos/Source/timers.c 
+
+OBJS += \
+./FreeRtos/Source/croutine.o \
+./FreeRtos/Source/event_groups.o \
+./FreeRtos/Source/heap_2.o \
+./FreeRtos/Source/list.o \
+./FreeRtos/Source/port.o \
+./FreeRtos/Source/queue.o \
+./FreeRtos/Source/tasks.o \
+./FreeRtos/Source/timers.o 
+
+C_DEPS += \
+./FreeRtos/Source/croutine.d \
+./FreeRtos/Source/event_groups.d \
+./FreeRtos/Source/heap_2.d \
+./FreeRtos/Source/list.d \
+./FreeRtos/Source/port.d \
+./FreeRtos/Source/queue.d \
+./FreeRtos/Source/tasks.d \
+./FreeRtos/Source/timers.d 
+
+
+# Each subdirectory must supply rules for building sources it contributes
+FreeRtos/Source/%.o: ../FreeRtos/Source/%.c
+	@echo 'Building file: $<'
+	@echo 'Invoking: Cross ARM C Compiler'
+	arm-none-eabi-gcc -mcpu=cortex-m4 -march=armv7e-m -mthumb -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections  -g -Dassert_param(extr) -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\FreeRtos\Include" -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\SPL\Include" -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\CMSIS" -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\CMSIS\Core" -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\CMSIS\Startup" -I"D:\git\STM32f4Discovery\Lesson00201(Rtos)\User" -std=gnu99 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" -c -o "$@" "$<"
+	@echo 'Finished building: $<'
+	@echo ' '
+
+
