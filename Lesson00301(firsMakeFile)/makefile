@@ -22,4 +22,4 @@ sec.hex: sec.elf
 	arm-none-eabi-objcopy -O ihex "sec.elf"  "sec.hex"
 
 clean:
-	-rm -rf sec.hex
+	-rm -rf sec.hex system_stm32f4xx.o startup_stm32f40xx.o sec.elf sec.map main.o
