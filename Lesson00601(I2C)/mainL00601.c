@@ -23,40 +23,63 @@
 __attribute__( ( always_inline ) ) __STATIC_INLINE  void init( void );
 __attribute__( ( always_inline ) ) __STATIC_INLINE  void uartReceived( void );
 __attribute__( ( always_inline ) ) __STATIC_INLINE  void uartTransm( void );
-__attribute__( ( always_inline ) ) __STATIC_INLINE  void ds3231Received( void );
-__attribute__( ( always_inline ) ) __STATIC_INLINE  void ds3231Transm( void );
+__attribute__( ( always_inline ) ) __STATIC_INLINE  void ds3231Read( void );
+__attribute__( ( always_inline ) ) __STATIC_INLINE  void ds3231Write( void );
+uint8_t StringToChar(uint8_t* data);
+void sendDataToUart(uint8_t *data);
+uint8_t * ShortIntToString(uint16_t data, uint8_t* adressDestenation);
+__attribute__( ( always_inline ) ) __STATIC_INLINE uint8_t DicToBinDic(uint8_t data);
 static void getTime( void );
 static void setTime( void );
 
-typedef enum{
+typedef enum {
 				NONE,
 				UART_RECEIVED,
 				UART_TRANSMIT,
-				DS3231_TRANSMIT,
-				DS3231_RECEIVED
+				DS3231_WRITE,
+				DS3231_READ
 								} status;
 
 status currentStatus = NONE;
+//---------------------------------------------------------------
+uint8_t buffUART[100] = { 0 };
+uint8_t counterBuffUart = 0;
+uint8_t sec;
+uint8_t hour;
+uint8_t min;
+uint8_t tmp;
+//---------------------------------------------------------------
 
 void USART2_IRQHandler(void) {
-	USART_SendData(USART2, '@');
+	buffUART[counterBuffUart++] = (uint16_t)(USART2->DR & (uint16_t)0x01FF);
+
+	if ( buffUART[counterBuffUart - 1] == '!' ) {
+		currentStatus = UART_RECEIVED;
+	}
+//	NVIC_DisableIRQ(USART2_IRQn);
+// выключаем прерывания до тех пор пока не обработаем текущую команду
 }
 
 
 void main( void ) {
 
 	init();
-
+	GPIO_SetBits( GPIOD, GPIO_Pin_12 );
 	while ( 1 ) {
 
 		if ( currentStatus == UART_RECEIVED ) {
 			uartReceived();
 		} else if ( currentStatus ==  UART_TRANSMIT ) {
 			uartTransm();
-		} else if ( currentStatus ==  DS3231_TRANSMIT ) {
-			ds3231Transm();
-		} else if ( currentStatus ==  DS3231_RECEIVED ) {
-			ds3231Received();
+			currentStatus = NONE;
+			NVIC_EnableIRQ(USART2_IRQn);
+		} else if ( currentStatus ==  DS3231_WRITE ) {
+			ds3231Write();
+			currentStatus = NONE;
+			NVIC_EnableIRQ(USART2_IRQn);
+		} else if ( currentStatus ==  DS3231_READ ) {
+			ds3231Read();
+			currentStatus = UART_TRANSMIT;
 		}
 
 	}
@@ -65,23 +88,95 @@ void main( void ) {
 
 void uartReceived( void ) {
 
+	// формат команд
+	// set HH:MM:SS\0
+	// get\0
+
+	if ( buffUART[0] == 's' && buffUART[1] == 'e' && buffUART[2] == 't' ) {
+		GPIO_SetBits( GPIOD, GPIO_Pin_15 );
+		currentStatus = DS3231_WRITE;
+		tmp = StringToChar( &buffUART[4] );
+		hour = DicToBinDic( tmp );
+/*		while(!(USART2->SR & USART_SR_TC));    //
+			USART2->DR=hour;                   //*/
+		for ( counterBuffUart = 4; buffUART[counterBuffUart] != ':'; counterBuffUart++ );
+		tmp = StringToChar( &buffUART[++counterBuffUart] );
+		min = DicToBinDic( tmp );
+/*		while(!(USART2->SR & USART_SR_TC));    //
+			USART2->DR=min;                   //*/
+		for ( ; buffUART[counterBuffUart] != ':'; counterBuffUart++ );
+		tmp = StringToChar( &buffUART[++counterBuffUart] );
+		sec = DicToBinDic( tmp );
+		while(!(USART2->SR & USART_SR_TC));    //
+			USART2->DR=sec;                   //
+			counterBuffUart = 0;
+	} else if ( buffUART[0] == 'g' && buffUART[1] == 'e' && buffUART[2] == 't' ) {
+		currentStatus = DS3231_READ;
+		GPIO_SetBits( GPIOD, GPIO_Pin_13 );
+	}
+
 }
 
 void uartTransm( void ) {
 
 }
 
-void ds3231Received( void ) {
+void ds3231Read( void ) {
+
+	while(!(USART2->SR & USART_SR_TC));    //
+				USART2->DR='+';
+
+	while(I2C_GetFlagStatus( I2C1, I2C_FLAG_BUSY) );
+	I2C_GenerateSTART( I2C1, ENABLE );
+
+	while(!I2C_CheckEvent( I2C1, I2C_EVENT_MASTER_MODE_SELECT) );
+
+	I2C_Send7bitAddress( I2C1, 0b1101000, I2C_Direction_Receiver);
+
+//	while(!I2C_CheckEvent( I2C1, I2C_EVENT_MASTER_RECEIVER_MODE_SELECTED) );
+	GPIO_SetBits( GPIOD, GPIO_Pin_15 );
+	sec = I2C_ReceiveData(I2C1);
+
+	while(!(USART2->SR & USART_SR_TC));    //
+				USART2->DR=sec;
+				GPIO_SetBits( GPIOD, GPIO_Pin_14 );
+//	min = I2C_ReceiveData(I2C1);
+
+	I2C_AcknowledgeConfig(I2C1, DISABLE);
+	I2C_GenerateSTOP(I2C1, ENABLE);
+
 
 }
 
-void ds3231Transm( void ) {
+void ds3231Write( void ) {
+
 
 }
 
+uint8_t DicToBinDic(uint8_t data) {
 
+	return ( data % 10 ) | ( ( data / 10 ) << 4 );
+}
+
+void sendDataToUart(uint8_t *data) {
+	while (*data != '\0') {
+		 while(!(USART2->SR & USART_SR_TC));
+		 USART2->DR=*data++;
+	}
+}
 
 void init( void ) {
+
+		GPIO_InitTypeDef GPIO_InitStructure;
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE);
+
+		GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+	  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+	  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+	  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_12 | GPIO_Pin_13 | GPIO_Pin_14 | GPIO_Pin_15;
+	  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+	  GPIO_Init(GPIOD, &GPIO_InitStructure);
+
 
 
 	{
@@ -155,6 +250,39 @@ void init( void ) {
 
 	__enable_irq();
 
+
+}
+
+// Перевод последовательности ASCII в число
+uint8_t StringToChar(uint8_t* data) {
+	uint8_t returnedValue = 0;
+	for (;*data >= '0' && *data <= '9'; data++)
+	returnedValue = 10 * returnedValue + (*data - '0');
+	return returnedValue;
+}
+
+
+// Перевод числа в последовательность ASCII
+uint8_t * ShortIntToString(uint16_t data, uint8_t* adressDestenation) {
+
+
+	uint8_t *startAdressDestenation = adressDestenation;
+	uint8_t *endAdressDestenation;
+	uint8_t buff;
+
+	do {// перевод входного значения в последовательность ASCII кодов
+		// в обратном порядке
+		*adressDestenation++ = data % 10 + '0';
+	} while ((data /= 10) > 0);
+	endAdressDestenation = adressDestenation ;
+
+	// разворот последовательности
+	for (adressDestenation--; startAdressDestenation < adressDestenation;startAdressDestenation++, adressDestenation--) {
+		buff = *startAdressDestenation;
+		*startAdressDestenation = *adressDestenation;
+		*adressDestenation = buff;
+	}
+	return endAdressDestenation;
 }
 
 void setTime( void ) {
