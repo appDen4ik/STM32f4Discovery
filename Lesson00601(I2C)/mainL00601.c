@@ -29,8 +29,7 @@ uint8_t StringToChar(uint8_t* data);
 void sendDataToUart(uint8_t *data);
 uint8_t * ShortIntToString(uint16_t data, uint8_t* adressDestenation);
 __attribute__( ( always_inline ) ) __STATIC_INLINE uint8_t DicToBinDic(uint8_t data);
-static void getTime( void );
-static void setTime( void );
+
 
 typedef enum {
 				NONE,
@@ -48,7 +47,7 @@ uint8_t sec;
 uint8_t hour;
 uint8_t min;
 uint8_t tmp;
-const uint8_t ds3231_adress = 0b11010000;
+const uint8_t ds3231_adress = 0b1101000;
 //---------------------------------------------------------------
 
 void USART2_IRQHandler(void) {
@@ -56,7 +55,7 @@ void USART2_IRQHandler(void) {
 
 	if ( buffUART[counterBuffUart - 1] == '!' ) {
 		currentStatus = UART_RECEIVED;
-		NVIC_DisableIRQ(USART2_IRQn);
+	//	NVIC_DisableIRQ(USART2_IRQn);
 	}
 
 // выключаем прерывания до тех пор пока не обработаем текущую команду
@@ -75,7 +74,7 @@ void main( void ) {
 			uartTransm();
 			currentStatus = NONE;
 			counterBuffUart = 0;
-			NVIC_EnableIRQ(USART2_IRQn);
+		//	NVIC_EnableIRQ(USART2_IRQn);
 		} else if ( currentStatus ==  DS3231_WRITE ) {
 			ds3231Write();
 			currentStatus = NONE;
@@ -128,72 +127,123 @@ void ds3231Read( void ) {
 	while(!(USART2->SR & USART_SR_TC));    //
 				USART2->DR='0';
 
-	while(I2C_GetFlagStatus( I2C1, I2C_FLAG_BUSY) );
-	I2C_GenerateSTART( I2C1, ENABLE );
 
-	GPIO_ToggleBits( GPIOD, GPIO_Pin_14 );
+// сначала проверяем свободна ли линия ( SDA и SCL - high )
 
-	while( !I2C_CheckEvent( I2C1, I2C_EVENT_MASTER_MODE_SELECT) );
+//    while ( ( I2C1->SR2 & I2C_SR2_BUSY ) == 0 ) {
 
-	I2C_Send7bitAddress( I2C1, ds3231_adress, I2C_Direction_Transmitter ); //I2C_Direction_Receiver
+//   }
 
-	while( !I2C_CheckEvent( I2C1, I2C_EVENT_MASTER_TRANSMITTER_MODE_SELECTED) );
+// далее отправляем START бит
 
-	I2C_SendData(I2C1, 0);
+    I2C1->CR1 |= I2C_CR1_START;
 
-	while(!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_BYTE_TRANSMITTED));
+																			while(!(USART2->SR & USART_SR_TC));    //
+																						USART2->DR='?';
+// проверяем что все ок ( старт сформировался )
 
+    while ( ( I2C1->SR1 & I2C_SR1_SB ) == 0 ) {
 
-
-
-
-//	while(I2C_GetFlagStatus( I2C1, I2C_FLAG_BUSY) );
-	I2C_GenerateSTART( I2C1, ENABLE );
-
-	while( !I2C_CheckEvent( I2C1, I2C_EVENT_MASTER_MODE_SELECT) );
-
-	I2C_Send7bitAddress( I2C1, ds3231_adress, I2C_Direction_Receiver );
-
-	while( !I2C_CheckEvent( I2C1, I2C_EVENT_MASTER_RECEIVER_MODE_SELECTED) );
-
-
-	I2C_AcknowledgeConfig( I2C1, ENABLE );
-	while( !I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_BYTE_RECEIVED) );
-
-
-	sec = I2C_ReceiveData(I2C1);
-
-	while( !(USART2->SR & USART_SR_TC) );    //
-				USART2->DR=sec;
-
-
-//	min = I2C_ReceiveData(I2C1);
-	I2C_AcknowledgeConfig( I2C1, ENABLE );
+    }
 
 
 
-	while( !I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_BYTE_RECEIVED) );
+// записываем адрес slave + бит направления ( 1 - чтение, 0 - запись )
+// сейчас пока просто чтение
+
+    I2C1->DR = ( ( ds3231_adress << 1 ) );
+
+																			while(!(USART2->SR & USART_SR_TC));    //
+																						USART2->DR=':';
+
+// ожидаем ответа ACK от слейва
+
+    while ( ( I2C1->SR1 & I2C_SR1_ADDR ) == 0 ) {
+
+    }
+
+// чтобы сбосить I2C_SR1_ADDR необходимо дополнительно прочитать I2C1->SR2
+
+   tmp = I2C1->SR2;
 
 
 
-		min = I2C_ReceiveData(I2C1);
-
-		while( !(USART2->SR & USART_SR_TC) );    //
-					USART2->DR=min;
 
 
-	I2C_AcknowledgeConfig( I2C1, DISABLE );
-	while( !I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_BYTE_RECEIVED) );
 
-	hour = I2C_ReceiveData(I2C1);
 
-	while( !(USART2->SR & USART_SR_TC) );    //
-				USART2->DR=hour;
+// устанавливаем адрес регистра который нас интересует ( 0 )
 
-				GPIO_ToggleBits( GPIOD, GPIO_Pin_15 );
+   I2C1->DR = 0;
 
-	I2C_GenerateSTOP( I2C1, ENABLE );
 
+
+// ожидаем ответа
+
+   while ( ( I2C1->SR1 & I2C_SR1_TXE ) == 0 ) {
+
+   }
+
+
+
+// дальше отправляем повторный СТАРТ
+
+   I2C1->CR1 |= I2C_CR1_START;
+
+   while(!(USART2->SR & USART_SR_TC));    //
+   				USART2->DR='=';
+
+// проверяем что все ок ( старт сформировался )
+
+   while ( ( I2C1->SR1 & I2C_SR1_SB ) == 0 ) {
+
+   }
+
+
+
+
+// записываем адрес slave + бит направления ( 1 - чтение, 0 - запись )
+// сейчас пока просто чтение
+
+   I2C1->DR = ( ( ds3231_adress << 1 ) + 1 );
+
+// ожидаем ответа ACK от слейва
+
+   while(!(USART2->SR & USART_SR_TC));    //
+   				USART2->DR='-';
+
+   while ( ( I2C1->SR1 & I2C_SR1_ADDR ) == 0 ) {
+
+   }
+
+// чтобы сбосить I2C_SR1_ADDR необходимо дополнительно прочитать I2C1->SR2
+
+   tmp = I2C1->SR2;
+
+
+
+
+
+
+// так как мы указали в направлении чтение то ожидаем флаг что данные пришли
+
+   while(!(USART2->SR & USART_SR_TC));    //
+   				USART2->DR='*';
+
+   while( ( I2C1->SR1 & I2C_SR1_RXNE ) == 0 ) {
+
+   }
+
+// забираем данные
+
+   sec = I2C1->DR;
+
+// формируем стоп
+
+   I2C1->CR1 |= I2C_CR1_STOP;
+
+   while(!(USART2->SR & USART_SR_TC));    //
+   	USART2->DR=sec;
 
 }
 
@@ -334,11 +384,73 @@ uint8_t * ShortIntToString(uint16_t data, uint8_t* adressDestenation) {
 	return endAdressDestenation;
 }
 
-void setTime( void ) {
 
-}
 
-void getTime( void ) {
+/*	while(I2C_GetFlagStatus( I2C1, I2C_FLAG_BUSY) );
+	I2C_GenerateSTART( I2C1, ENABLE );
 
-}
+	GPIO_ToggleBits( GPIOD, GPIO_Pin_14 );
 
+	while( !I2C_CheckEvent( I2C1, I2C_EVENT_MASTER_MODE_SELECT) );
+
+	I2C_Send7bitAddress( I2C1, ds3231_adress, I2C_Direction_Transmitter ); //I2C_Direction_Receiver
+
+	while( !I2C_CheckEvent( I2C1, I2C_EVENT_MASTER_TRANSMITTER_MODE_SELECTED) );
+
+	I2C_SendData(I2C1, 0);
+
+	while(!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_BYTE_TRANSMITTED));
+
+
+
+
+
+//	while(I2C_GetFlagStatus( I2C1, I2C_FLAG_BUSY) );
+	I2C_GenerateSTART( I2C1, ENABLE );
+
+	while( !I2C_CheckEvent( I2C1, I2C_EVENT_MASTER_MODE_SELECT) );
+
+	I2C_Send7bitAddress( I2C1, ds3231_adress, I2C_Direction_Receiver );
+
+	while( !I2C_CheckEvent( I2C1, I2C_EVENT_MASTER_RECEIVER_MODE_SELECTED) );*/
+
+
+/*
+	I2C_AcknowledgeConfig( I2C1, ENABLE );
+	while( !I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_BYTE_RECEIVED) );
+
+
+	sec = I2C_ReceiveData(I2C1);
+
+	while( !(USART2->SR & USART_SR_TC) );    //
+				USART2->DR=sec;
+
+
+//	min = I2C_ReceiveData(I2C1);
+	I2C_AcknowledgeConfig( I2C1, ENABLE );
+
+
+
+	while( !I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_BYTE_RECEIVED) );
+
+
+
+		min = I2C_ReceiveData(I2C1);
+
+		while( !(USART2->SR & USART_SR_TC) );    //
+					USART2->DR=min;
+
+
+	I2C_AcknowledgeConfig( I2C1, DISABLE );
+	while( !I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_BYTE_RECEIVED) );
+
+	hour = I2C_ReceiveData(I2C1);
+
+	while( !(USART2->SR & USART_SR_TC) );    //
+				USART2->DR=hour;
+
+				GPIO_ToggleBits( GPIOD, GPIO_Pin_15 );
+
+	I2C_GenerateSTOP( I2C1, ENABLE );
+
+*/
