@@ -22,33 +22,39 @@
 
 __attribute__( ( always_inline ) ) __STATIC_INLINE  void init( void );
 __attribute__( ( always_inline ) ) __STATIC_INLINE  void uartReceived( void );
-__attribute__( ( always_inline ) ) __STATIC_INLINE  void uartTransm( void );
 __attribute__( ( always_inline ) ) __STATIC_INLINE  void ds3231Read( void );
 __attribute__( ( always_inline ) ) __STATIC_INLINE  void ds3231Write( void );
-uint8_t StringToChar(uint8_t* data);
-void sendDataToUart(uint8_t *data);
-uint8_t * ShortIntToString(uint16_t data, uint8_t* adressDestenation);
-__attribute__( ( always_inline ) ) __STATIC_INLINE uint8_t DicToBinDic(uint8_t data);
+static uint8_t StringToChar( uint8_t* data );
+static void sendDataToUart( uint8_t *data );
+static uint8_t * ShortIntToString( uint16_t data, uint8_t* adressDestenation );
+__attribute__( ( always_inline ) ) __STATIC_INLINE uint8_t DicToBinDic( uint8_t data );
 
+static uint8_t readOneByte( uint8_t adress );
+static void readBytes( uint8_t *destination, uint8_t startAdress, uint8_t howMatch );
 
+static void writeOneByte( uint8_t adress, uint8_t data );
+static void writeBytes( uint8_t startAdress, uint8_t *data, uint8_t howMatch );
+
+//---------------------------------------------------------------------------------------------
 typedef enum {
 				NONE,
 				UART_RECEIVED,
-				UART_TRANSMIT,
 				DS3231_WRITE,
 				DS3231_READ
 								} status;
 
 status currentStatus = NONE;
-//---------------------------------------------------------------
+//---------------------------------------------------------------------------------------------
 uint8_t buffUART[100] = { 0 };
 uint8_t counterBuffUart = 0;
-uint8_t sec;
-uint8_t hour;
-uint8_t min;
-uint8_t tmp;
+uint8_t sec = 0;
+uint8_t hour = 0;
+uint8_t min = 0;
+uint8_t tmp = 0;
+uint8_t secMinHour[3] = {0};
+uint8_t all[12] = {0};
 const uint8_t ds3231_adress = 0b1101000;
-//---------------------------------------------------------------
+//---------------------------------------------------------------------------------------------
 
 void USART2_IRQHandler(void) {
 	buffUART[counterBuffUart++] = (uint16_t)(USART2->DR & (uint16_t)0x01FF);
@@ -61,7 +67,6 @@ void USART2_IRQHandler(void) {
 // выключаем прерывания до тех пор пока не обработаем текущую команду
 }
 
-
 void main( void ) {
 
 	init();
@@ -70,18 +75,15 @@ void main( void ) {
 
 		if ( currentStatus == UART_RECEIVED ) {
 			uartReceived();
-		} else if ( currentStatus ==  UART_TRANSMIT ) {
-			uartTransm();
-			currentStatus = NONE;
-			counterBuffUart = 0;
-		//	NVIC_EnableIRQ(USART2_IRQn);
 		} else if ( currentStatus ==  DS3231_WRITE ) {
 			ds3231Write();
 			currentStatus = NONE;
+			counterBuffUart = 0;
 			NVIC_EnableIRQ(USART2_IRQn);
 		} else if ( currentStatus ==  DS3231_READ ) {
 			ds3231Read();
-			currentStatus = UART_TRANSMIT;
+			currentStatus = NONE;
+			counterBuffUart = 0;
 		}
 
 	}
@@ -91,8 +93,8 @@ void main( void ) {
 void uartReceived( void ) {
 
 	// формат команд
-	// set HH:MM:SS\0
-	// get\0
+	// set HH:MM:SS!
+	// get!
 
 	if ( buffUART[0] == 's' && buffUART[1] == 'e' && buffUART[2] == 't' ) {
 		currentStatus = DS3231_WRITE;
@@ -108,8 +110,8 @@ void uartReceived( void ) {
 		for ( ; buffUART[counterBuffUart] != ':'; counterBuffUart++ );
 		tmp = StringToChar( &buffUART[++counterBuffUart] );
 		sec = DicToBinDic( tmp );
-		while(!(USART2->SR & USART_SR_TC));    //
-			USART2->DR=sec;                   //
+/*		while(!(USART2->SR & USART_SR_TC));
+			USART2->DR=sec;   */
 			counterBuffUart = 0;
 	} else if ( buffUART[0] == 'g' && buffUART[1] == 'e' && buffUART[2] == 't' ) {
 		currentStatus = DS3231_READ;
@@ -118,139 +120,317 @@ void uartReceived( void ) {
 
 }
 
-void uartTransm( void ) {
-
-}
 
 void ds3231Read( void ) {
 
-	while(!(USART2->SR & USART_SR_TC));    //
-				USART2->DR='0';
+	readBytes( all, 0, 12 );
 
+	for ( tmp = 0; tmp < 12;  ) {
+	    while(!(USART2->SR & USART_SR_TC));
+	    USART2->DR = all[tmp++];
+	}
+
+/*	while(!(USART2->SR & USART_SR_TC));
+	USART2->DR = readOneByte( 0 );*/
+
+
+
+   GPIO_SetBits( GPIOD, GPIO_Pin_15 );
+}
+
+void ds3231Write( void ) {
+
+/*	writeOneByte( 0, sec);
+	writeOneByte( 1, min );
+	writeOneByte( 2, hour);*/
+
+	secMinHour[0] = sec;
+	secMinHour[1] = min;
+	secMinHour[2] = hour;
+
+	writeBytes( 0, secMinHour, 3 );
+
+    GPIO_SetBits( GPIOD, GPIO_Pin_15 );
+
+}
+
+
+void readBytes( uint8_t *destination, uint8_t startAdress, uint8_t howMatch ) {
 
 // сначала проверяем свободна ли линия ( SDA и SCL - high )
-
-//    while ( ( I2C1->SR2 & I2C_SR2_BUSY ) == 0 ) {
-
-//   }
-
-// далее отправляем START бит
-
-    I2C1->CR1 |= I2C_CR1_START;
-
-																			while(!(USART2->SR & USART_SR_TC));    //
-																						USART2->DR='?';
-// проверяем что все ок ( старт сформировался )
-
-    while ( ( I2C1->SR1 & I2C_SR1_SB ) == 0 ) {
+    while ( ( I2C1->SR2 & I2C_SR2_BUSY ) != 0 ) {
 
     }
 
+// далее отправляем START бит (после отправки стартового бита модуль
+// автоматически становится мастером)
+    I2C1->CR1 |= I2C_CR1_START;
 
+// проверяем что все ок ( старт сформировался )
+    while ( 0 == ( I2C1->SR1 & I2C_SR1_SB ) ) {
 
-// записываем адрес slave + бит направления ( 1 - чтение, 0 - запись )
-// сейчас пока просто чтение
+    }
 
+// записываем адрес slave + 0 бит направления ( 1 - чтение, 0 - запись )
+// 0bit = 0
     I2C1->DR = ( ( ds3231_adress << 1 ) );
 
-																			while(!(USART2->SR & USART_SR_TC));    //
-																						USART2->DR=':';
-
-// ожидаем ответа ACK от слейва
-
+// ожидаем ACK от слейва
     while ( ( I2C1->SR1 & I2C_SR1_ADDR ) == 0 ) {
 
     }
 
 // чтобы сбосить I2C_SR1_ADDR необходимо дополнительно прочитать I2C1->SR2
+    tmp = I2C1->SR2;
 
-   tmp = I2C1->SR2;
+// устанавливаем адрес startAdress
+    I2C1->DR = startAdress;
 
+// ожидаем пока data register станет empty
+    while ( ( I2C1->SR1 & I2C_SR1_TXE ) == 0 ) {
 
+    }
 
-
-
-
-
-// устанавливаем адрес регистра который нас интересует ( 0 )
-
-   I2C1->DR = 0;
-
-
-
-// ожидаем ответа
-
-   while ( ( I2C1->SR1 & I2C_SR1_TXE ) == 0 ) {
-
-   }
-
-
-
-// дальше отправляем повторный СТАРТ
-
-   I2C1->CR1 |= I2C_CR1_START;
-
-   while(!(USART2->SR & USART_SR_TC));    //
-   				USART2->DR='=';
+// отправляем повторный СТАРТ
+    I2C1->CR1 |= I2C_CR1_START;
 
 // проверяем что все ок ( старт сформировался )
+    while ( ( I2C1->SR1 & I2C_SR1_SB ) == 0 ) {
 
-   while ( ( I2C1->SR1 & I2C_SR1_SB ) == 0 ) {
+    }
 
-   }
-
-
-
-
-// записываем адрес slave + бит направления ( 1 - чтение, 0 - запись )
-// сейчас пока просто чтение
-
-   I2C1->DR = ( ( ds3231_adress << 1 ) + 1 );
+// записываем адрес slave + 0 бит направления ( 1 - чтение, 0 - запись )
+// 0bit = 1 чтение
+    I2C1->DR = ( ( ds3231_adress << 1 ) + 1 );
 
 // ожидаем ответа ACK от слейва
+    while ( ( I2C1->SR1 & I2C_SR1_ADDR ) == 0 ) {
 
-   while(!(USART2->SR & USART_SR_TC));    //
-   				USART2->DR='-';
-
-   while ( ( I2C1->SR1 & I2C_SR1_ADDR ) == 0 ) {
-
-   }
+    }
 
 // чтобы сбосить I2C_SR1_ADDR необходимо дополнительно прочитать I2C1->SR2
+    tmp = I2C1->SR2;
 
-   tmp = I2C1->SR2;
+//перед тем как забрать байты, укажем что будем ждать еще ACK
+    I2C1->CR1 |=  I2C_CR1_ACK;
 
+    for (; howMatch-- > 1;) {
+    // ожидаем флаг что данные пришли
+        while( ( I2C1->SR1 & I2C_SR1_RXNE ) == 0 ) {
 
+        }
 
+    // забираем данные
+        *destination++ = I2C1->DR;
+    }
 
+//перед тем как забрать этот байт, укажем что больше байтов не ждем
+    I2C1->CR1 &=  ( ~I2C_CR1_ACK );
 
+// ожидаем флаг что данные пришли
+    while( ( I2C1->SR1 & I2C_SR1_RXNE ) == 0 ) {
 
-// так как мы указали в направлении чтение то ожидаем флаг что данные пришли
-
-   while(!(USART2->SR & USART_SR_TC));    //
-   				USART2->DR='*';
-
-   while( ( I2C1->SR1 & I2C_SR1_RXNE ) == 0 ) {
-
-   }
+    }
 
 // забираем данные
+    *destination = I2C1->DR;
 
-   sec = I2C1->DR;
+//формируем стоп
+    I2C1->CR1 |=  ( I2C_CR1_STOP );
+//ждем пока линия освободится
+    while( I2C1->SR2 & I2C_SR2_BUSY ) {
 
-// формируем стоп
+    }
 
-   I2C1->CR1 |= I2C_CR1_STOP;
+}
 
-   while(!(USART2->SR & USART_SR_TC));    //
-   	USART2->DR=sec;
+uint8_t readOneByte( uint8_t adress ) {
+
+	uint8_t buf;
+
+// сначала проверяем свободна ли линия ( SDA и SCL - high )
+	while ( ( I2C1->SR2 & I2C_SR2_BUSY ) != 0 ) {
+
+	}
+
+// далее отправляем START бит
+	I2C1->CR1 |= I2C_CR1_START;
+
+// проверяем что все ок ( старт сформировался )
+	while ( 0 == ( I2C1->SR1 & I2C_SR1_SB )  ) {
+
+	}
+
+// записываем адрес slave + 0 бит направления ( 1 - чтение, 0 - запись )
+// 0bit = 0
+	I2C1->DR = ( ( ds3231_adress << 1 ) );
+
+// ожидаем ACK от слейва
+	while ( ( I2C1->SR1 & I2C_SR1_ADDR ) == 0 ) {
+
+	}
+
+// чтобы сбосить I2C_SR1_ADDR необходимо дополнительно прочитать I2C1->SR2
+	tmp = I2C1->SR2;
+
+// устанавливаем адрес startAdress
+	I2C1->DR = adress;
+
+// ожидаем пока data register станет empty
+	while ( ( I2C1->SR1 & I2C_SR1_TXE ) == 0 ) {
+
+	}
+
+// отправляем повторный СТАРТ
+	I2C1->CR1 |= I2C_CR1_START;
+
+// проверяем что все ок ( старт сформировался )
+    while ( ( I2C1->SR1 & I2C_SR1_SB ) == 0 ) {
+
+	}
+
+// записываем адрес slave + 0 бит направления ( 1 - чтение, 0 - запись )
+// 0bit = 1 чтение
+    I2C1->DR = ( ( ds3231_adress << 1 ) + 1 );
+
+
+// ожидаем ответа ACK от слейва
+	while ( ( I2C1->SR1 & I2C_SR1_ADDR ) == 0 ) {
+
+	}
+
+
+// чтобы сбосить I2C_SR1_ADDR необходимо дополнительно прочитать I2C1->SR2
+	tmp = I2C1->SR2;
+
+//перед тем как забрать этот байт, укажем что больше байтов не ждем
+    I2C1->CR1 &=  ~I2C_CR1_ACK;
+// ожидаем флаг что данные пришли
+	while( ( I2C1->SR1 & I2C_SR1_RXNE ) == 0 ) {
+
+	}
+
+// забираем данные
+    buf = I2C1->DR;
+
+//формируем стоп
+	I2C1->CR1 |= ( I2C_CR1_STOP );
+//ждем пока линия освободится
+	while( I2C1->SR2 & I2C_SR2_BUSY ) {
+
+	}
+
+	return buf;
+}
+
+void writeOneByte( uint8_t adress, uint8_t data ) {
+
+// сначала проверяем свободна ли линия ( SDA и SCL - high )
+	while ( ( I2C1->SR2 & I2C_SR2_BUSY ) != 0 ) {
+
+	}
+
+// далее отправляем START бит
+	I2C1->CR1 |= I2C_CR1_START;
+
+// проверяем что все ок ( старт сформировался )
+	while ( 0 == ( I2C1->SR1 & I2C_SR1_SB )  ) {
+
+	}
+
+// записываем адрес slave + 0 бит направления ( 1 - чтение, 0 - запись )
+// 0bit = 0
+	I2C1->DR = ( ( ds3231_adress << 1 ) );
+
+// ожидаем ACK от слейва
+	while ( ( I2C1->SR1 & I2C_SR1_ADDR ) == 0 ) {
+
+	}
+
+// чтобы сбосить I2C_SR1_ADDR необходимо дополнительно прочитать I2C1->SR2
+	tmp = I2C1->SR2;
+
+// устанавливаем адрес startAdress
+	I2C1->DR = adress;
+
+// ожидаем пока data register станет empty
+	while ( ( I2C1->SR1 & I2C_SR1_TXE ) == 0 ) {
+
+	}
+
+// пишем данные
+	I2C1->DR = data;
+
+// ожидаем пока data register станет empty
+    while ( ( I2C1->SR1 & I2C_SR1_TXE ) == 0 ) {
+
+	}
+
+//формируем стоп
+    I2C1->CR1 |=  ( I2C_CR1_STOP );
+//ждем пока линия освободится
+    while( I2C1->SR2 & I2C_SR2_BUSY ) {
+
+    }
 
 }
 
-void ds3231Write( void ) {
+void writeBytes( uint8_t startAdress, uint8_t *data, uint8_t howMatch ) {
 
+// сначала проверяем свободна ли линия ( SDA и SCL - high )
+    while ( ( I2C1->SR2 & I2C_SR2_BUSY ) != 0 ) {
+
+	}
+
+// далее отправляем START бит
+	I2C1->CR1 |= I2C_CR1_START;
+
+// проверяем что все ок ( старт сформировался )
+	while ( 0 == ( I2C1->SR1 & I2C_SR1_SB )  ) {
+
+	}
+
+// записываем адрес slave + 0 бит направления ( 1 - чтение, 0 - запись )
+// 0bit = 0
+	I2C1->DR = ( ( ds3231_adress << 1 ) );
+
+// ожидаем ACK от слейва
+	while ( ( I2C1->SR1 & I2C_SR1_ADDR ) == 0 ) {
+
+	}
+
+// чтобы сбосить I2C_SR1_ADDR необходимо дополнительно прочитать I2C1->SR2
+	tmp = I2C1->SR2;
+
+// устанавливаем адрес startAdress
+	I2C1->DR = startAdress;
+
+// ожидаем пока data register станет empty
+	while ( ( I2C1->SR1 & I2C_SR1_TXE ) == 0 ) {
+
+	}
+
+
+	for (; howMatch-- > 0 ;){
+	// пишем данные
+		I2C1->DR = *data++;
+
+	// ожидаем пока data register станет empty
+		while ( ( I2C1->SR1 & I2C_SR1_TXE ) == 0 ) {
+
+		}
+	}
+
+
+//формируем стоп
+	I2C1->CR1 |=  ( I2C_CR1_STOP );
+//ждем пока линия освободится
+	while( I2C1->SR2 & I2C_SR2_BUSY ) {
+
+	}
 
 }
+
 
 uint8_t DicToBinDic(uint8_t data) {
 
@@ -315,7 +495,7 @@ void init( void ) {
 	    USART_ITConfig(USART2, USART_IT_RXNE, ENABLE);
 	}
 
-	{
+	{//i2c1 PB6 - SCL PB7 - SDA
 		GPIO_InitTypeDef gpio;
 		I2C_InitTypeDef i2c;
 
@@ -343,6 +523,17 @@ void init( void ) {
 		GPIO_PinAFConfig(GPIOB, GPIO_PinSource7, GPIO_AF_I2C1);
 
 		I2C_Cmd(I2C1, ENABLE);
+
+		// включаем тактирование порта gpiob и i2c
+
+/*		RCC->AHB1ENR |= RCC_AHB1ENR_GPIOBEN;
+
+		//настраиваем i2c, включаем тактирование
+		RCC->APB1ENR |= RCC_APB1ENR_I2C1EN;
+	    // Reset
+	    I2C1->CR1 = I2C_CR1_SWRST;*/
+
+
 	}
 
 
@@ -359,7 +550,6 @@ uint8_t StringToChar(uint8_t* data) {
 	returnedValue = 10 * returnedValue + (*data - '0');
 	return returnedValue;
 }
-
 
 // Перевод числа в последовательность ASCII
 uint8_t * ShortIntToString(uint16_t data, uint8_t* adressDestenation) {
@@ -385,72 +575,3 @@ uint8_t * ShortIntToString(uint16_t data, uint8_t* adressDestenation) {
 }
 
 
-
-/*	while(I2C_GetFlagStatus( I2C1, I2C_FLAG_BUSY) );
-	I2C_GenerateSTART( I2C1, ENABLE );
-
-	GPIO_ToggleBits( GPIOD, GPIO_Pin_14 );
-
-	while( !I2C_CheckEvent( I2C1, I2C_EVENT_MASTER_MODE_SELECT) );
-
-	I2C_Send7bitAddress( I2C1, ds3231_adress, I2C_Direction_Transmitter ); //I2C_Direction_Receiver
-
-	while( !I2C_CheckEvent( I2C1, I2C_EVENT_MASTER_TRANSMITTER_MODE_SELECTED) );
-
-	I2C_SendData(I2C1, 0);
-
-	while(!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_BYTE_TRANSMITTED));
-
-
-
-
-
-//	while(I2C_GetFlagStatus( I2C1, I2C_FLAG_BUSY) );
-	I2C_GenerateSTART( I2C1, ENABLE );
-
-	while( !I2C_CheckEvent( I2C1, I2C_EVENT_MASTER_MODE_SELECT) );
-
-	I2C_Send7bitAddress( I2C1, ds3231_adress, I2C_Direction_Receiver );
-
-	while( !I2C_CheckEvent( I2C1, I2C_EVENT_MASTER_RECEIVER_MODE_SELECTED) );*/
-
-
-/*
-	I2C_AcknowledgeConfig( I2C1, ENABLE );
-	while( !I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_BYTE_RECEIVED) );
-
-
-	sec = I2C_ReceiveData(I2C1);
-
-	while( !(USART2->SR & USART_SR_TC) );    //
-				USART2->DR=sec;
-
-
-//	min = I2C_ReceiveData(I2C1);
-	I2C_AcknowledgeConfig( I2C1, ENABLE );
-
-
-
-	while( !I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_BYTE_RECEIVED) );
-
-
-
-		min = I2C_ReceiveData(I2C1);
-
-		while( !(USART2->SR & USART_SR_TC) );    //
-					USART2->DR=min;
-
-
-	I2C_AcknowledgeConfig( I2C1, DISABLE );
-	while( !I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_BYTE_RECEIVED) );
-
-	hour = I2C_ReceiveData(I2C1);
-
-	while( !(USART2->SR & USART_SR_TC) );    //
-				USART2->DR=hour;
-
-				GPIO_ToggleBits( GPIOD, GPIO_Pin_15 );
-
-	I2C_GenerateSTOP( I2C1, ENABLE );
-
-*/
