@@ -15,7 +15,7 @@
 #include "oled128x64.h"
 #include "oledGraphicLibrary.h"
 
-
+extern uint8_t oledDRAM[8][128];
 
 void initOLED( void ) {
 
@@ -75,10 +75,16 @@ void setDot( uint8_t x, uint8_t y ){
 
 	uint8_t byte = 0x01;
 
+
 	x--;
 	y--;
 
 	if (x < 128 && y < 64){
+
+		//налаживаем маску и записываем сначала в отпечаток
+		oledDRAM[y/8][x] |= byte << y%8;
+
+		//затем в физ. экранчик
 		writeOneByte( 0b0, 0x22 );//( Page Address )
 		writeOneByte( 0b0, y/8 );
 		writeOneByte( 0b0, 0x07 );
@@ -87,7 +93,7 @@ void setDot( uint8_t x, uint8_t y ){
 		writeOneByte( 0b0, x );
 		writeOneByte( 0b0, 127 );
 
-		writeOneByte( 0b01000000,   byte << y%8  );
+		writeOneByte( 0b01000000,   oledDRAM[y/8][x] );
 	}
 }
 
@@ -95,6 +101,8 @@ void setDot( uint8_t x, uint8_t y ){
 void clearOLED( void ){
 	uint8_t column;
 	uint8_t page;
+	const uint16_t  sizeimprint = sizeof(oledDRAM);
+	uint8_t *point = oledDRAM;
 
 	uint32_t i;
 
@@ -111,6 +119,11 @@ void clearOLED( void ){
 				writeOneByte( 0b01000000, 0x0 );
 			}
 	}
+	//затем чистим отпечаток
+	for ( i = 0; i < sizeimprint; i++ ) {
+		*point++ = 0;
+	}
+
 }
 
 
@@ -123,26 +136,26 @@ static void plot_circle(int16_t x, int16_t y, int16_t x_center, int16_t y_center
   int16_t  x1, y1;
 
   for (x1=x;x1<x+1;++x1){
-	  del(2000000);
+	  del(200000);
 	  setDot(x1+x_center,y+y_center);
-	  del(2000000);
+	  del(200000);
 	  setDot(x1+x_center,y_center-y);
-	  del(2000000);
+	  del(200000);
 	  setDot(x_center-x1,y+y_center);
-	  del(2000000);
+	  del(200000);
 	  setDot(x_center-x1,y_center-y);
-	  del(2000000);
+	  del(200000);
   }
   for (y1=y;y1<y+1;++y1){
-	  del(2000000);
+	  del(200000);
 	  setDot(y1+x_center,x+y_center);
-	  del(2000000);
+	  del(200000);
 	  setDot(y1+x_center,y_center-x);
-	  del(2000000);
+	  del(200000);
 	  setDot(x_center-y1,x+y_center);
-	  del(2000000);
+	  del(200000);
 	  setDot(x_center-y1,y_center-x);
-	  del(2000000);
+	  del(200000);
   }
 }
 

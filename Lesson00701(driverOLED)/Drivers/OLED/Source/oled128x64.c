@@ -13,6 +13,8 @@
 #include "stm32f4xx_rcc.h"
 #include "oled128x64.h"
 
+		//отпечаток памяти oled
+		uint8_t	oledDRAM[8][128] = { [0][0] = 0 };
 
 void writeOneByte( uint8_t adress, uint8_t data ) {
 
@@ -68,6 +70,7 @@ void writeOneByte( uint8_t adress, uint8_t data ) {
 
 }
 
+
 void initI2C( void ){
 	//i2c1 PB6 - SCL PB7 - SDA
 		GPIO_InitTypeDef gpio;
@@ -97,5 +100,8 @@ void initI2C( void ){
 		GPIO_PinAFConfig(GPIOB, GPIO_PinSource7, GPIO_AF_I2C1);
 
 		I2C_Cmd(I2C1, ENABLE);
+
+
+
 
 }
