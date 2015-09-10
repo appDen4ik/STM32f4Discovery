@@ -31,37 +31,52 @@ void main(void) {
 while (1){
 
 	  setnull();
-
 	  setColor(0xE0000000);
-	  	  setColor(0xE0000000);
-	  	 setColor(0xffffffff);
-	  	 del();
+	  setColor(0xE0000000);
+	  setColor(0xffffffff);
 
 
 
-	  	 setnull();
-	  setColor(0xff8B2202);
-	  setColor(0xff8B2202);
+	  setnull();
+	  setColor(0xff19EB27);
+	  setColor(0xffA428A8);
 	  setColor(0xffffffff);
 
 
 	  del();
 
+
 	  setnull();
-	  setColor(0xffE0CA00 );
-
-
-	  setColor(0xffD540D7);
-
+	  setColor(0xffA428A8 );
+	  setColor(0xff9DA828);
 	  setColor(0xffffffff);
 
 	  del();
 
 	  setnull();
-	  setColor(0xff471B50);
-	  setColor(0xE0000000);
+	  setColor(0xff1BDFD9);
+	  setColor(0xffA428A8);
 	  setColor(0xffffffff);
 	  del();
+
+	  setnull();
+	  setColor(0xffA428A8);
+	  setColor(0xff0000ff);
+	  setColor(0xffffffff);
+	  del();
+
+	  setnull();
+	  setColor(0xffff0000);
+	  setColor(0xffA428A8);
+	  setColor(0xffffffff);
+	  del();
+
+	  setnull();
+		  setColor(0xffA428A8);
+		  setColor(0xff00ff00);
+		  setColor(0xffffffff);
+		  del();
+
 	  GPIO_SetBits(GPIOD, GPIO_Pin_15);
 }
 
@@ -139,7 +154,7 @@ void deley(void){
 }
 
 void del(void){
-	uint32_t i = 0xffffff;
+	uint32_t i = 0x7FFFFF;
 	for ( ;i-- > 0 ; ) {
 
 	}
