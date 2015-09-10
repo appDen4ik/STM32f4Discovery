@@ -43,7 +43,7 @@ all: Lesson00801(WS2801).elf secondary-outputs
 Lesson00801(WS2801).elf: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: Cross ARM C Linker'
-	arm-none-eabi-gcc -mcpu=cortex-m3 -mthumb -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections  -g3 -T "D:\git\STM32f4Discovery\Lesson00801(WS2801)\CMSIS\STM32F417IG_FLASH.ld" -Xlinker --gc-sections -Wl,-Map,"Lesson00801(WS2801).map" -o "Lesson00801(WS2801).elf" $(OBJS) $(USER_OBJS) $(LIBS)
+	arm-none-eabi-gcc -mcpu=cortex-m3 -mthumb -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections  -g3 -T "D:\git\STM32f4Discovery\STM32f4Discovery\Lesson00801(WS2801)\CMSIS\STM32F417IG_FLASH.ld" -Xlinker --gc-sections -Wl,-Map,"Lesson00801(WS2801).map" -o "Lesson00801(WS2801).elf" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 

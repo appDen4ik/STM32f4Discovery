@@ -17,7 +17,7 @@ C_DEPS += \
 %.o: ../%.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross ARM C Compiler'
-	arm-none-eabi-gcc -mcpu=cortex-m3 -mthumb -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections  -g3 -Dassert_param(x) -I"D:\git\STM32f4Discovery\Lesson00801(WS2801)\CMSIS" -I"D:\git\STM32f4Discovery\Lesson00801(WS2801)\CMSIS\Core" -I"D:\git\STM32f4Discovery\Lesson00801(WS2801)\CMSIS\Startup" -I"D:\git\STM32f4Discovery\Lesson00801(WS2801)\SPL\Include" -std=gnu11 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" -c -o "$@" "$<"
+	arm-none-eabi-gcc -mcpu=cortex-m3 -mthumb -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections  -g3 -Dassert_param(x) -I"D:\git\STM32f4Discovery\STM32f4Discovery\Lesson00801(WS2801)\CMSIS" -I"D:\git\STM32f4Discovery\STM32f4Discovery\Lesson00801(WS2801)\CMSIS\Core" -I"D:\git\STM32f4Discovery\STM32f4Discovery\Lesson00801(WS2801)\CMSIS\Startup" -I"D:\git\STM32f4Discovery\STM32f4Discovery\Lesson00801(WS2801)\SPL\Include" -std=gnu11 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" -c -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 

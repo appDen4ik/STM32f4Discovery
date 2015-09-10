@@ -27,42 +27,45 @@ void main(void) {
 	  GPIO_ResetBits(GPIOD, GPIO_Pin_14);
 	  GPIO_SetBits(GPIOD, GPIO_Pin_13);
 	  del(); */
+	  setColor(0xffffffff);
+while (1){
 
 	  setnull();
 
-	  setColor(0x0);
-	  	  setColor(0x0);
-	  	 setColor(0xffffff);
+	  setColor(0xE0000000);
+	  	  setColor(0xE0000000);
+	  	 setColor(0xffffffff);
 	  	 del();
-	  	 del();
-	  	 del();
+
+
 
 	  	 setnull();
-	  setColor(0x8B2202);
-	  del();
-	  setColor(0x8B2202);
-	  del();
-	  setColor(0xffffff);
+	  setColor(0xff8B2202);
+	  setColor(0xff8B2202);
+	  setColor(0xffffffff);
 
 
 	  del();
 
 	  setnull();
-	  setColor(0xE0CA00 );
+	  setColor(0xffE0CA00 );
 
 
-	  setColor(0xD540D7);
+	  setColor(0xffD540D7);
 
-	  setColor(0xffffff);
+	  setColor(0xffffffff);
 
 	  del();
 
 	  setnull();
-	  setColor(0x471B50);
-	  setColor(0x000000);
-	  setColor(0xffffff);
-
+	  setColor(0xff471B50);
+	  setColor(0xE0000000);
+	  setColor(0xffffffff);
+	  del();
 	  GPIO_SetBits(GPIOD, GPIO_Pin_15);
+}
+
+
 
 
 }
@@ -101,7 +104,6 @@ void setnull(void){
 //pd13 clock, pd14 data
 void setColor(uint32_t color){
 	int8_t shift = 31;
-	color |= 0xff00000000;
 //	GPIO_SetBits(GPIOD, GPIO_Pin_13);
 
 	for ( ;shift >= 0 ;shift-- ) {
