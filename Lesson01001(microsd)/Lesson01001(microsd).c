@@ -128,6 +128,7 @@ uint8_t sendCmd( uint8_t cmd, uint32_t arg ) {
 	writeData((uint8_t)arg);				/* Argument[7..0] */
 	n = 0x01;							/* Dummy CRC + Stop */
 	if (cmd == CMD0) n = 0x95;			/* Valid CRC for CMD0(0) */
+	if (cmd == CMD8) n = 0x87;			/* Valid CRC for CMD8(0x1AA) */
 	writeData(n);
 
 	n = 10;								/* Wait for response (10 bytes max) */
@@ -229,10 +230,16 @@ void initMicrosd(void) {
 	}
 
 
-	while ( ! ( ( USART2 -> SR ) & (USART_SR_TC) ) );//
+	while ( ! ( ( USART2 -> SR ) & (USART_SR_TC) ) );
 	if ( (USART2 -> DR = sendCmd(CMD0, 0) ) == 1 ) {
 
-		sendStringToUART ( "my first command" );
+		while ( ! ( ( USART2 -> SR ) & (USART_SR_TC) ) );
+		if ( ( USART2 -> DR = sendCmd(CMD8, 0x1AA) ) == 1) {	/* SDv2? */
+			sendStringToUART ( "cmd8");
+		} else {
+
+
+		}
 
 	}
 
