@@ -7,6 +7,7 @@
 #define HMC5883L_ADRESS 0x1E
 
 
+
 static void initUSART( void )  __attribute__((always_inline));
 static void initI2C(void) __attribute__((always_inline));
 static uint8_t readOneByte( uint8_t adress );
@@ -138,6 +139,7 @@ void sendStringToUART( uint8_t * data) {
 		}
 	}
 
+	
 }
 
 uint8_t readOneByte( uint8_t adress ) {
@@ -149,7 +151,6 @@ uint8_t readOneByte( uint8_t adress ) {
 
 	}
 
-
 // далее отправляем START бит
 	I2C1->CR1 |= I2C_CR1_START;
 
@@ -158,10 +159,9 @@ uint8_t readOneByte( uint8_t adress ) {
 
 	}
 
-
 // записываем адрес slave + 0 бит направления ( 1 - чтение, 0 - запись )
 // 0bit = 0
-	I2C1->DR = ( HMC5883L_ADRESS  << 1);
+	I2C1->DR = ( HMC5883L_ADRESS << 1);
 
 // ожидаем ACK от слейва
 	while ( ( I2C1->SR1 & I2C_SR1_ADDR ) == 0 ) {
