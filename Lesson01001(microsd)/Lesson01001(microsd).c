@@ -46,7 +46,9 @@ static int wait_ready(uint16_t wt );			/* Timeout [ms] */
 
 void main() {
 
-	int i;
+	int i, a,c;
+	uint8_t res;
+	uint8_t buf[1000];
 
 	initSpi();
 	initUsart();
@@ -59,7 +61,63 @@ void main() {
 
 	initMicrosd();
 
+	// чтение 0-го сектора
+	for ( a = 0; a < 3906250; a++) {
+		sendStringToUART ( "current sector: ");
+		while ( ! ( ( USART2 -> SR ) & (USART_SR_TC) ) );
+				USART2 -> DR = a >> 8;
+		while ( ! ( ( USART2 -> SR ) & (USART_SR_TC) ) );
+				USART2 -> DR = a;
+	if ( ( res = sendCmd(CMD17, 512 * a) ) == 0) {
+		sendStringToUART ( "cmd17 ok");
+		while ( ! ( ( USART2 -> SR ) & (USART_SR_TC) ) );
+		USART2 -> DR = res;
+		c=200;
+		do {
+			res = writeData(0xFF);
+			/* This loop will take a time. Insert rot_rdq() here for multitask envilonment. */
+		} while ((res == 0xFF) && c--/*&& Timer1*/);
 
+		if(res == 0xFE) {
+				sendStringToUART ( "resv token 0xfe ok");
+				for( i = 0; i<512; i++ ){
+
+					buf[i] = writeData(0xff);
+				}
+				writeData(0xff); writeData(0xff); //crc
+				res = writeData(0xFF);
+
+				sendStringToUART ( "res:");
+
+				while ( ! ( ( USART2 -> SR ) & (USART_SR_TC) ) );
+							USART2 -> DR = res;
+
+				sendStringToUART ( "resv data:");
+						for ( i = 0; i < 100000; i++ ) {
+
+						}
+						i = 0;
+						while (i < 512) {
+							while ( ! ( ( USART2 -> SR ) & (USART_SR_TC) ) );
+								USART2 -> DR = buf[i++];
+
+						}
+						sendStringToUART ( "end");
+						for ( i = 0; i < 100000; i++ ) {
+
+						}
+
+			} else {
+				sendStringToUART ( "error");
+				while ( ! ( ( USART2 -> SR ) & (USART_SR_TC) ) );
+												USART2 -> DR = c;
+				sendStringToUART ( "resv token ");
+				while ( ! ( ( USART2 -> SR ) & (USART_SR_TC) ) );
+												USART2 -> DR = res;
+			}
+					deselect();
+		}
+	}
 	while ( 1 ) {
 
 
@@ -75,12 +133,11 @@ int wait_ready (	/* 1:Ready, 0:Timeout */
 {
 	uint8_t d;
 
-
-	uint16_t Timer2 = wt;
+	//uint16_t Timer2 = wt;
 	do {
 		d = writeData(0xFF);
 		/* This loop takes a time. Insert rot_rdq() here for multitask envilonment. */
-	} while (d != 0xFF /*&& Timer2*/);	/* Wait for card goes ready or timeout */
+	} while (d != 0xFF && /*Timer2*/wt--);	/* Wait for card goes ready or timeout */
 
 	return (d == 0xFF) ? 1 : 0;
 }
@@ -104,10 +161,15 @@ static void deselect(void) {
 }
 
 
-
 uint8_t sendCmd( uint8_t cmd, uint32_t arg ) {
 
 	uint8_t n, res;
+
+	if (cmd & 0x80) {	/* Send a CMD55 prior to ACMD<n> */
+			cmd &= 0x7F;
+			res = sendCmd(CMD55, 0);
+			if (res > 1) return res;
+		}
 
 	if (cmd != CMD12) {
 
@@ -116,8 +178,7 @@ uint8_t sendCmd( uint8_t cmd, uint32_t arg ) {
 				sendStringToUART ( "select error");
 				return 0xFF;
 			}
-//			sendStringToUART ( "select check point");
-
+//			sendStringToUART ( "deselect");
 	}
 
 	/* Send command packet */
@@ -136,14 +197,13 @@ uint8_t sendCmd( uint8_t cmd, uint32_t arg ) {
 	do{
 		res = writeData(0xFF);
 //
-	while ( ! ( ( USART2 -> SR ) & (USART_SR_TC) ) );
-	USART2 -> DR = res;
+//	while ( ! ( ( USART2 -> SR ) & (USART_SR_TC) ) );
+//	USART2 -> DR = res;
 //
 	}while ((res & 0x80) && --n);
 
 	return res;
 }
-
 
 
 void initSpi( void ) {
@@ -157,7 +217,6 @@ void initSpi( void ) {
     RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB, ENABLE);
 
 
-
 /*	GPIO_PinAFConfig(GPIOA, GPIO_PinSource7, GPIO_AF_SPI1);
 	GPIO_PinAFConfig(GPIOA, GPIO_PinSource5, GPIO_AF_SPI1);
 	GPIO_PinAFConfig(GPIOA, GPIO_PinSource6, GPIO_AF_SPI1);*/
@@ -165,7 +224,6 @@ void initSpi( void ) {
     GPIO_PinAFConfig(GPIOB, GPIO_PinSource3, GPIO_AF_SPI1);
     GPIO_PinAFConfig(GPIOB, GPIO_PinSource4, GPIO_AF_SPI1);
     GPIO_PinAFConfig(GPIOB, GPIO_PinSource5, GPIO_AF_SPI1);
-
 
 
 /*	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
@@ -183,7 +241,6 @@ void initSpi( void ) {
 	GPIO_Init(GPIOB, &GPIO_InitStructure);
 
 
-
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
 		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 		GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
@@ -192,8 +249,6 @@ void initSpi( void ) {
 
 
 		GPIO_SetBits(GPIOD,GPIO_Pin_12);
-
-
 
 
 	//«аполн€ем структуру с параметрами SPI модул€
@@ -216,26 +271,34 @@ void initSpi( void ) {
 }
 
 
-
 void initMicrosd(void) {
 
-	sendStringToUART ( "microsd start init" );
+	sendStringToUART( "microsd start init" );
 	int i;
+	uint8_t ocr[4], n, res;
 
 	GPIO_SetBits(GPIOD,GPIO_Pin_12);
 	//сначала посылаем 80 импульсов на clk
-	for ( i = 0; i < 10; i++ ) {
-		while ( ! ( ( USART2 -> SR ) & (USART_SR_TC) ) );
-		USART2 -> DR = writeData(0xff);
-	}
+	for ( i = 0; i < 10; i++ ) writeData(0xff);
+
+	if ( sendCmd(CMD0, 0) == 1 ) {
+
+		if ( sendCmd(CMD8, 0x1AA) == 1) {	/* SDv2? */
+
+			for (n = 0; n < 4; n++) ocr[n] = writeData(0xFF);
+			if (ocr[2] == 0x01 && ocr[3] == 0xAA) {
 
 
-	while ( ! ( ( USART2 -> SR ) & (USART_SR_TC) ) );
-	if ( (USART2 -> DR = sendCmd(CMD0, 0) ) == 1 ) {
+				while (/*Timer1 && */ sendCmd(ACMD41, 1UL << 30 ));
 
-		while ( ! ( ( USART2 -> SR ) & (USART_SR_TC) ) );
-		if ( ( USART2 -> DR = sendCmd(CMD8, 0x1AA) ) == 1) {	/* SDv2? */
-			sendStringToUART ( "cmd8");
+				if (/*Timer1 &&*/ sendCmd(CMD58, 0) == 0) {		/* Check CCS bit in the OCR */
+					sendStringToUART ( "cmd58 ok" );
+					for (n = 0; n < 4; n++) ocr[n] = writeData(0xFF);
+
+	//					ty = (ocr[0] & 0x40) ? CT_SD2 | CT_BLOCK : CT_SD2;	/* Card id SDv2 */
+					}
+			}
+
 		} else {
 
 
@@ -246,7 +309,6 @@ void initMicrosd(void) {
 	sendStringToUART ( "end initMicrosd");
 
 }
-
 
 
 void initUsart( void ) {
@@ -285,11 +347,9 @@ void initUsart( void ) {
 
 
 		USART2 -> BRR = (mantissa << 4) | fraction;
-		USART2 -> CR1 = USART_WordLength_8b | USART_CR1_UE | USART_CR1_RE | USART_CR1_TE ;
+		USART2 -> CR1 = USART_WordLength_8b | USART_CR1_UE | USART_CR1_RE | USART_CR1_TE;
 
 }
-
-
 
 
 void sendStringToUART( uint8_t * data) {
@@ -301,7 +361,6 @@ void sendStringToUART( uint8_t * data) {
 		}
 		USART2 -> DR = *data++;
 	}
-
 
 }
 
